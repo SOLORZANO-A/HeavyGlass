@@ -4,7 +4,6 @@ Proyecto Final – QualityOps: Construcción, Medición y Mejora de Calidad de S
 Instituto Superior Universitario Sucre  
 Asignatura: Calidad de Software / Métricas de Calidad  
 Semestre: 4to  
-Modalidad: Grupal  
 
 ---
 
