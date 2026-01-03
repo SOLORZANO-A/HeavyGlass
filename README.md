@@ -53,3 +53,36 @@ El proyecto está orientado a **demostrar calidad del software mediante evidenci
 ```bash
 git clone https://github.com/SOLORZANO-A/HeavyGlass.git
 cd HeavyGlass
+
+-- Instalar dependencias PHP
+composer install
+
+-- Crear archivo de entorno
+cp .env.example .env
+
+
+Configurar en .env:
+
+DB_DATABASE=heavy_glass
+DB_USERNAME=root
+DB_PASSWORD=
+
+-- Generar clave
+php artisan key:generate
+
+-- Migraciones y seeders
+php artisan migrate:fresh --seed
+
+-- Ejecutar el servidor
+php artisan serve
+
+-- Usuarios de Prueba
+-- Rol	Usuario	Contraseña
+Administrador	admin@heavyglass.com
+	password
+Técnico	tecnico@heavyglass.com
+	password
+Cajero	cajero@heavyglass.com
+	password
+Asesor asesor@heavyglass.com
+    password
