@@ -12,7 +12,7 @@
     <div class="container mt-5">
 
         <h3 class="mb-4 text-center">
-            Historial del vehículo: <strong>{{ $search }}</strong>
+            Historial del vehículo: <strong>{{ $plate }}</strong>
         </h3>
 
         @foreach ($proformas as $proforma)

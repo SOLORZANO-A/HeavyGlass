@@ -224,6 +224,27 @@ Swal.fire({
 
 <?php echo $__env->yieldPushContent('scripts'); ?>
 
+<?php if(session('success')): ?>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: "<?php echo e(session('success')); ?>",
+        confirmButtonColor: '#3085d6'
+    });
+</script>
+<?php endif; ?>
+
+<?php if(session('error')): ?>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Acción no permitida',
+        text: "<?php echo e(session('error')); ?>",
+        confirmButtonColor: '#d33'
+    });
+</script> <?php endif; ?>
+
 </body>
 </html>
 <?php /**PATH C:\laragon\www\TitulacionHeavy-respaldo\resources\views/layouts/app.blade.php ENDPATH**/ ?>

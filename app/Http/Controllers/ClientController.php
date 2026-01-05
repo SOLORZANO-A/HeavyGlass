@@ -19,35 +19,35 @@ class ClientController extends Controller
     }
 
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'first_name'   => 'required|string|max:255',
-        'last_name'    => 'required|string|max:255',
-        'document'     => 'required|string|unique:clients,document',
-        'phone'        => 'nullable|string',
-        'email'        => 'nullable|email',
-        'address'      => 'nullable|string',
-        'client_type'  => 'required|in:owner,third,insurance',
-        'description'  => 'nullable|string',
-        'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    ]);
-
-    // 1️⃣ Crear cliente
-    $client = Client::create($data);
-
-    // 2️⃣ Guardar archivo si existe
-    if ($request->hasFile('id_copy')) {
-        $path = $request->file('id_copy')->store('clients/ids', 'public');
-
-        $client->update([
-            'id_copy_path' => $path,
+    {
+        $data = $request->validate([
+            'first_name'   => 'required|string|max:255',
+            'last_name'    => 'required|string|max:255',
+            'document'     => 'required|string|unique:clients,document',
+            'phone'        => 'nullable|string',
+            'email'        => 'nullable|email',
+            'address'      => 'nullable|string',
+            'client_type'  => 'required|in:owner,third,insurance',
+            'description'  => 'nullable|string',
+            'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
-    }
 
-    return redirect()
-        ->route('clients.index')
-        ->with('success', 'Cliente creado correctamente');
-}
+        // 1️⃣ Crear cliente
+        $client = Client::create($data);
+
+        // 2️⃣ Guardar archivo si existe
+        if ($request->hasFile('id_copy')) {
+            $path = $request->file('id_copy')->store('clients/ids', 'public');
+
+            $client->update([
+                'id_copy_path' => $path,
+            ]);
+        }
+
+        return redirect()
+            ->route('clients.index')
+            ->with('success', 'Cliente creado correctamente');
+    }
 
 
 
@@ -62,50 +62,61 @@ class ClientController extends Controller
     }
 
     public function update(Request $request, Client $client)
-{
-    $data = $request->validate([
-        'first_name'   => 'required|string|max:255',
-        'last_name'    => 'required|string|max:255',
-        'document'     => 'required|string|unique:clients,document,' . $client->id,
-        'phone'        => 'nullable|string',
-        'email'        => 'nullable|email',
-        'address'      => 'nullable|string',
-        'client_type'  => 'required|in:owner,third,insurance',
-        'description'  => 'nullable|string',
-        'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    ]);
+    {
+        $data = $request->validate([
+            'first_name'   => 'required|string|max:255',
+            'last_name'    => 'required|string|max:255',
+            'document'     => 'required|string|unique:clients,document,' . $client->id,
+            'phone'        => 'nullable|string',
+            'email'        => 'nullable|email',
+            'address'      => 'nullable|string',
+            'client_type'  => 'required|in:owner,third,insurance',
+            'description'  => 'nullable|string',
+            'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-    // 1️⃣ Actualizar datos
-    $client->update($data);
+        // 1️⃣ Actualizar datos
+        $client->update($data);
 
-    // 2️⃣ Nuevo archivo
-    if ($request->hasFile('id_copy')) {
+        // 2️⃣ Nuevo archivo
+        if ($request->hasFile('id_copy')) {
 
-        // eliminar archivo anterior
-        if ($client->id_copy_path) {
-            \Storage::disk('public')->delete($client->id_copy_path);
+            // eliminar archivo anterior
+            if ($client->id_copy_path) {
+                \Storage::disk('public')->delete($client->id_copy_path);
+            }
+
+            $path = $request->file('id_copy')->store('clients/ids', 'public');
+
+            $client->update([
+                'id_copy_path' => $path,
+            ]);
         }
 
-        $path = $request->file('id_copy')->store('clients/ids', 'public');
-
-        $client->update([
-            'id_copy_path' => $path,
-        ]);
+        return redirect()
+            ->route('clients.index')
+            ->with('success', 'Cliente actualizado correctamente');
     }
-
-    return redirect()
-        ->route('clients.index')
-        ->with('success', 'Cliente actualizado correctamente');
-}
 
 
 
     public function destroy(Client $client)
     {
+        // 🔒 Si tiene vehículos con hojas de ingreso
+        $hasRelatedData = $client->vehicles()
+            ->whereHas('intakeSheets')
+            ->exists();
+
+        if ($hasRelatedData) {
+            return redirect()
+                ->route('clients.index')
+                ->with('error', 'No se puede eliminar el cliente porque tiene vehículos con órdenes de trabajo registradas.');
+        }
+
         $client->delete();
 
         return redirect()
             ->route('clients.index')
-            ->with('success', 'Client deleted successfully');
+            ->with('success', 'Cliente eliminado correctamente.');
     }
 }

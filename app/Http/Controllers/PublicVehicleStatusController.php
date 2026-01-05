@@ -13,30 +13,31 @@ class PublicVehicleStatusController extends Controller
     }
 
     public function search(Request $request)
-{
-    $request->validate([
-        'search' => 'required|string|min:2'
-    ]);
+    {
+        $request->validate([
+            'plate'    => 'required|string|min:5',
+            'document' => 'required|string|min:8',
+        ]);
 
-    $search = trim($request->search);
+        $plate    = strtoupper(trim($request->plate));
+        $document = trim($request->document);
 
-    $proformas = Proforma::with([
+        $proformas = Proforma::with([
             'details',
             'payments',
             'workOrder.technicians'
         ])
-        ->where('vehicle_plate', 'LIKE', "%{$search}%")
-        ->orWhere('id', $search)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where('vehicle_plate', $plate)
+            ->where('client_document', $document)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    if ($proformas->isEmpty()) {
-        return back()->withErrors(
-            'No se encontró información con los datos ingresados.'
-        );
+        if ($proformas->isEmpty()) {
+            return back()->withErrors(
+                'No se encontró información con los datos ingresados. Verifique placa y cédula.'
+            );
+        }
+
+        return view('public.result', compact('proformas', 'plate'));
     }
-
-    return view('public.result', compact('proformas', 'search'));
-}
-
 }

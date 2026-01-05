@@ -187,6 +187,7 @@ class WorkOrderController extends Controller
      */
     public function destroy(WorkOrder $workOrder)
     {
+
         $workOrder->delete();
 
         return redirect()

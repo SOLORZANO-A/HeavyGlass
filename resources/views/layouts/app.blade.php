@@ -224,5 +224,26 @@ Swal.fire({
 
 @stack('scripts')
 
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: "{{ session('success') }}",
+        confirmButtonColor: '#3085d6'
+    });
+</script>
+@endif
+
+@if (session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Acción no permitida',
+        text: "{{ session('error') }}",
+        confirmButtonColor: '#d33'
+    });
+</script> @endif
+
 </body>
 </html>

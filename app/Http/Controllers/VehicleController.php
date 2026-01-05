@@ -85,10 +85,17 @@ class VehicleController extends Controller
 
     public function destroy(Vehicle $vehicle)
     {
+        // Verificar si tiene hojas de ingreso
+        if ($vehicle->intakeSheets()->exists()) {
+            return redirect()
+                ->route('vehicles.index')
+                ->with('error', 'No se puede eliminar el vehículo porque tiene hojas de ingreso u órdenes de trabajo asociadas.');
+        }
+
         $vehicle->delete();
 
         return redirect()
             ->route('vehicles.index')
-            ->with('success', 'Vehicle deleted successfully');
+            ->with('success', 'Vehículo eliminado correctamente.');
     }
 }

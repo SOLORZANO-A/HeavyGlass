@@ -109,17 +109,21 @@
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <form action="{{ route('work_orders.destroy', $order) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
+                                    @role('admin')
+                                        <form action="{{ route('work_orders.destroy', $order) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
 
-                                        <button type="button" class="btn btn-danger btn-sm" data-confirm
-                                            data-title="¿Eliminar orden de taller?"
-                                            data-text="La orden será eliminada definitivamente" data-confirm="Sí, eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                            <button type="button" class="btn btn-danger btn-sm" data-confirm
+                                                data-title="¿Eliminar orden de trabajo?"
+                                                data-text="La orden de trabajo será eliminada definitivamente"
+                                                data-confirm="Sí, eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endrole
+
                                 </td>
                             </tr>
                         @empty

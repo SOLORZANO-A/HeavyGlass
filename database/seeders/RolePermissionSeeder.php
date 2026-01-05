@@ -11,111 +11,75 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
+        // Limpiar caché de permisos
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 🔑 PERMISOS
+        /*
+        |--------------------------------------------------------------------------
+        | PERMISOS GLOBALES (1 permiso = 1 módulo)
+        |--------------------------------------------------------------------------
+        */
         $permissions = [
-            // Clients
-            'clients.view',
-            'clients.create',
-            'clients.edit',
-
-            // Vehicles
-            'vehicles.view',
-            'vehicles.create',
-            'vehicles.edit',
-
-            // Intake Sheets
-            'intake_sheets.view',
-            'intake_sheets.create',
-            'intake_sheets.photos',
-
-            // Proformas
-            'proformas.view',
-            'proformas.create',
-            'proformas.edit',
-            'proformas.approve',
-
-            // Work Orders
-            'work_orders.view',
-            'work_orders.assign',
-            'work_orders.update_status',
-            'work_orders.time_tracking',
-
-            // Work Types
-            'work_types.manage',
-
-            // Payments
-            'payments.view',
-            'payments.create',
-            'payments.receipts',
-
-            // Profiles
-            'profiles.view',
-            'profiles.edit',
-
-            // Users & Reports
-            'users.manage',
-            'reports.view',
+            'manage clients',
+            'manage vehicles',
+            'manage intake sheets',
+            'manage work orders',
+            'manage proformas',
+            'manage payments',
+            'manage users',
+            'manage profiles',
+            'manage work types',
+            'view reports',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
         }
 
-        // 🎭 ROLES
-        $admin = Role::firstOrCreate(['name' => 'admin']);
-        $advisor = Role::firstOrCreate(['name' => 'advisor']);
-        $workshopManager = Role::firstOrCreate(['name' => 'workshop_manager']);
-        $cashier = Role::firstOrCreate(['name' => 'cashier']);
+        /*
+        |--------------------------------------------------------------------------
+        | ROLES
+        |--------------------------------------------------------------------------
+        */
+        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $advisor = Role::firstOrCreate(['name' => 'advisor', 'guard_name' => 'web']);
+        $workshopManager = Role::firstOrCreate(['name' => 'workshop_manager', 'guard_name' => 'web']);
+        $cashier = Role::firstOrCreate(['name' => 'cashier', 'guard_name' => 'web']);
 
-        // 🟥 ADMIN → todo
+        /*
+        |--------------------------------------------------------------------------
+        | ASIGNACIÓN DE PERMISOS
+        |--------------------------------------------------------------------------
+        */
+
+        // ADMIN → acceso total
         $admin->syncPermissions(Permission::all());
 
-        // 🟦 ADVISOR
+        // ADVISOR
         $advisor->syncPermissions([
-            'clients.view',
-            'clients.create',
-            'clients.edit',
-
-            'vehicles.view',
-            'vehicles.create',
-            'vehicles.edit',
-
-            'intake_sheets.view',
-            'intake_sheets.create',
-            'intake_sheets.photos',
-
-            'proformas.view',
-            'proformas.create',
-
-            'profiles.view',
-            'profiles.edit',
+            'manage clients',
+            'manage vehicles',
+            'manage intake sheets',
+            'manage proformas',
+            'manage profiles',
         ]);
 
-        // 🟨 WORKSHOP MANAGER
+        // WORKSHOP MANAGER
         $workshopManager->syncPermissions([
-            'vehicles.view',
-
-            'intake_sheets.view',
-
-            'work_orders.view',
-            'work_orders.assign',
-            'work_orders.update_status',
-            'work_orders.time_tracking',
-
-            'work_types.manage',
+            'manage vehicles',
+            'manage intake sheets',
+            'manage work orders',
+            'manage work types',
         ]);
 
-        // 🟩 CASHIER
+        // CASHIER
         $cashier->syncPermissions([
-            'proformas.view',
-
-            'payments.view',
-            'payments.create',
-            'payments.receipts',
-
-            'reports.view',
+            'manage proformas',
+            'manage payments',
+            'view reports',
         ]);
     }
 }
