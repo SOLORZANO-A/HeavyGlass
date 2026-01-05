@@ -76,12 +76,6 @@ php artisan migrate:fresh --seed
 php artisan serve
 
 -- Usuarios de Prueba
--- Rol	Usuario	Contraseña
-Administrador	admin@heavyglass.com
-	password
-Técnico	tecnico@heavyglass.com
-	password
-Cajero	cajero@heavyglass.com
-	password
-Asesor asesor@heavyglass.com
-    password
+-- ADMIN
+user: admintotal@admin.com
+password: admin1812
