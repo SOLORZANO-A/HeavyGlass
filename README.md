@@ -25,7 +25,7 @@ El proyecto está orientado a **demostrar calidad del software mediante evidenci
 
 ## 🧱 Tecnologías Utilizadas
 
-- **Backend:** Laravel 12 (PHP 8.2)
+- **Backend:** Laravel 12 (PHP 8.3)
 - **Frontend:** Blade + Bootstrap 5 + AdminLTE
 - **Base de datos:** MySQL
 - **Control de versiones:** Git + GitHub
@@ -38,7 +38,7 @@ El proyecto está orientado a **demostrar calidad del software mediante evidenci
 
 ## ⚙️ Requisitos del Sistema
 
-- PHP >= 8.1
+- PHP >= 8.3
 - Composer
 - Node.js y NPM
 - MySQL
