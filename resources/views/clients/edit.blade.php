@@ -104,11 +104,14 @@
                                value="{{ old('address', $client->address) }}">
                     </div>
 
+<<<<<<< HEAD
                      <div class="form-group">
                         <label>Numero de referencia</label>
                         <input type="text" name="reference_number" class="form-control" value="{{ old('reference_number', $client->reference_number) }}">
                     </div>
 
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     {{-- TIPO DE CLIENTE --}}
                     <div class="form-group">
                         <label>Tipo de cliente</label>
@@ -122,6 +125,7 @@
                             </option>
 
                             <option value="third"
+<<<<<<< HEAD
                                 {{ old('client_type', $client->client_type) == 'third' ? 'selected' : '' }}>
                                 Tercero (No propietario)
                             </option>
@@ -129,6 +133,11 @@
                                 {{ old('client_type', $client->client_type) == 'insurance' ? 'selected' : '' }}>
                                 Aseguradora
                             </option>
+=======
+                                {{ old('client_type', $client->client_type) == 'third_party' ? 'selected' : '' }}>
+                                Tercero (No propietario)
+                            </option>
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                         </select>
 
                         @error('client_type')

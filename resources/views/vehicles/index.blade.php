@@ -7,6 +7,7 @@
 
         <div class="card">
             <div class="card-header">
+<<<<<<< HEAD
                 <h3 class="card-title">
                     <i class="fas fa-car"></i> Lista de Vehículos
                 </h3>
@@ -38,6 +39,19 @@
 
             <div class="card-body table-responsive p-0">
                 <table id="vehicles-table" class="table table-hover text-nowrap">
+=======
+                <h3 class="card-title">Lista Vehiculos</h3>
+
+                <div class="card-tools">
+                    <a href="{{ route('vehicles.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Nuevo Vehiculo
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <thead>
                         <tr>
                             <th>ID</th>

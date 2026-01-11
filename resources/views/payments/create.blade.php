@@ -27,6 +27,7 @@
                     @endif
 
                     {{-- PROFORMA --}}
+<<<<<<< HEAD
                     <select name="proforma_id" id="proforma_select"
                         class="form-control select2 @error('proforma_id') is-invalid @enderror" required>
 
@@ -55,6 +56,45 @@
                         @endforeach
                     </select>
 
+=======
+                    <div class="form-group">
+                        <label>Proforma</label>
+                        <select name="proforma_id" id="proforma_select" class="form-control" required>
+
+                            <option value="">-- Seleccione Proforma --</option>
+
+                            @foreach ($proformas as $proforma)
+                                @php
+                                    $paid = $proforma->payments->where('status', 'valid')->sum('amount');
+
+                                    $balance = round($proforma->total - $paid, 2);
+
+                                    $isSigned = $proforma->signature_status === 'signed';
+                                @endphp
+
+                                <option value="{{ $proforma->id }}" data-total="{{ $proforma->total }}"
+                                    data-paid="{{ $paid }}" data-balance="{{ $balance }}"
+                                    {{ !$isSigned ? 'disabled' : '' }}>
+
+                                    #{{ $proforma->id }} — {{ $proforma->vehicle_plate }}
+
+                                    @if (!$isSigned)
+                                        ❌ (No firmada)
+                                    @elseif($balance <= 0)
+                                        ✅ (Pagada)
+                                    @else
+                                        💰 (Saldo: ${{ number_format($balance, 2) }})
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <small class="form-text text-muted mt-1">
+                            ⚠️ Solo se pueden registrar pagos para proformas <strong>firmadas por el cliente</strong>.
+                        </small>
+
+                    </div>
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
 
                     {{-- INFO DINÁMICA --}}
                     <div class="row mt-3">
@@ -117,6 +157,7 @@
 
 @push('scripts')
     <script>
+<<<<<<< HEAD
         $(document).ready(function() {
 
             const totalInput = $('#proforma_total');
@@ -138,6 +179,21 @@
             proformaSelect.on('select2:select', function(e) {
 
                 const option = e.params.data.element;
+=======
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const select = document.getElementById('proforma_select');
+            const totalInput = document.getElementById('proforma_total');
+            const paidInput = document.getElementById('proforma_paid');
+            const balanceInput = document.getElementById('proforma_balance');
+            const amountInput = document.getElementById('amount_input');
+
+            let currentBalance = 0;
+
+            select.addEventListener('change', function() {
+                const option = this.options[this.selectedIndex];
+                if (!option.value) return;
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
 
                 const total = parseFloat(option.dataset.total);
                 const paid = parseFloat(option.dataset.paid);
@@ -145,6 +201,7 @@
 
                 currentBalance = balance;
 
+<<<<<<< HEAD
                 totalInput.val('$' + total.toFixed(2));
                 paidInput.val('$' + paid.toFixed(2));
                 balanceInput.val('$' + balance.toFixed(2));
@@ -165,6 +222,17 @@
 
             // ✅ VALIDACIÓN DEL MONTO
             amountInput.on('input', function() {
+=======
+                totalInput.value = '$' + total.toFixed(2);
+                paidInput.value = '$' + paid.toFixed(2);
+                balanceInput.value = '$' + balance.toFixed(2);
+
+                amountInput.value = balance.toFixed(2);
+                amountInput.classList.remove('is-invalid');
+            });
+
+            amountInput.addEventListener('input', function() {
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                 const entered = parseFloat(this.value) || 0;
 
                 if (entered > currentBalance) {
@@ -177,6 +245,7 @@
         });
     </script>
 @endpush
+<<<<<<< HEAD
 @push('styles')
     <style>
         /* ===== FIX SELECT2 + ADMINLTE ===== */
@@ -215,3 +284,5 @@
         }
     </style>
 @endpush
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634

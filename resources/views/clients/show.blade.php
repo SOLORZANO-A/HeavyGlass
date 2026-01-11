@@ -3,6 +3,7 @@
 @section('title', 'Client Details')
 
 @section('content')
+<<<<<<< HEAD
 
 @php
     $staffTypeLabels = [
@@ -11,6 +12,8 @@
         'owner'           => 'Dueño',
     ];
 @endphp
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
     <div class="container-fluid">
 
         <div class="card card-info">
@@ -66,6 +69,7 @@
                         <td>{{ $client->address ?? '—' }}</td>
                     </tr>
                     <tr>
+<<<<<<< HEAD
                         <th>Numero de referencia</th>
                         <td>{{ $client->reference_number ?? '—' }}</td>
                     </tr>
@@ -73,6 +77,10 @@
                         
                         <th>Tipo Cliente</th>
                         <td>{{ $staffTypeLabels[$client->client_type] ?? ucfirst($client->client_type) }}</td>
+=======
+                        <th>Tipo Cliente</th>
+                        <td>{{ ucfirst($client->client_type) }}</td>
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     </tr>
                     <tr>
                         <th>Descripcion</th>

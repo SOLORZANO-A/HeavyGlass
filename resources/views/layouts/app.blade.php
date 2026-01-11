@@ -244,6 +244,7 @@ Swal.fire({
         confirmButtonColor: '#d33'
     });
 </script> @endif
+<<<<<<< HEAD
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -269,6 +270,8 @@ Swal.fire({
     });
 </script>
 
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
 
 </body>
 </html>

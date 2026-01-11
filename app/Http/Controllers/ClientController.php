@@ -30,7 +30,10 @@ class ClientController extends Controller
             'client_type'  => 'required|in:owner,third,insurance',
             'description'  => 'nullable|string',
             'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+<<<<<<< HEAD
             'reference_number' => 'nullable|string|max:255',
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
         ]);
 
         // 1️⃣ Crear cliente
@@ -74,7 +77,10 @@ class ClientController extends Controller
             'client_type'  => 'required|in:owner,third,insurance',
             'description'  => 'nullable|string',
             'id_copy'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+<<<<<<< HEAD
             'reference_number' => 'nullable|string|max:255',
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
         ]);
 
         // 1️⃣ Actualizar datos

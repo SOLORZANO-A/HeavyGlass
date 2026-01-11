@@ -7,6 +7,7 @@
 
         <div class="card">
             <div class="card-header">
+<<<<<<< HEAD
                 <h3 class="card-title">
                     <i class="fas fa-users"></i> Lista de Clientes
                 </h3>
@@ -26,13 +27,25 @@
                 <div class="col-md-4 text-end">
                     <a href="{{ route('clients.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Nuevo Cliente
+=======
+                <h3 class="card-title">Lista Clientes</h3>
+
+                <div class="card-tools">
+                    <a href="{{ route('clients.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Nuevo CLiente
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     </a>
                 </div>
             </div>
 
+<<<<<<< HEAD
 
             <div class="card-body table-responsive p-0">
                 <table id="clients-table" class="table table-hover text-nowrap">
+=======
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -59,9 +72,13 @@
                                         @case('third')
                                             Tercera persona
                                         @break
+<<<<<<< HEAD
                                         @case('insurance')
                                             Aseguradora
                                         @break
+=======
+
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                                         @default
                                             —
                                     @endswitch

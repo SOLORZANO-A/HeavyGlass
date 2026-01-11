@@ -42,7 +42,10 @@
                         <th>Año</th>
                         <td>{{ $vehicle->year ?? '—' }}</td>
                     </tr>
+<<<<<<< HEAD
                     
+=======
+>>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <tr>
                         <th>Color</th>
                         <td>{{ $vehicle->color ?? '—' }}</td>
