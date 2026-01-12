@@ -21,7 +21,6 @@
 
         <div class="card">
             <div class="card-header">
-<<<<<<< HEAD
                 <h3 class="card-title">
                     <i class="fas fa-clipboard-list"></i> Vehículos – Hojas de Ingreso
                 </h3>
@@ -52,19 +51,6 @@
 
             <div class="card-body table-responsive p-0">
                 <table id="intake-table" class="table table-hover text-nowrap">
-=======
-                <h3 class="card-title">Vehículos – Hojas de Ingreso</h3>
-
-                <div class="card-tools">
-                    <a href="{{ route('intake_sheets.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Nueva Hoja de Ingreso
-                    </a>
-                </div>
-            </div>
-
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -145,6 +131,19 @@
                                     <a href="{{ route('intake_sheets.edit', $sheet) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    @if (!$sheet->inspection)
+                                        <a href="{{ route('intake_inspections.create', $sheet) }}"
+                                            class="btn btn-info btn-sm" title="Registrar inspección">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    @else
+                                        <span class="badge badge-success" title="Inspección registrada">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    @endif
+
+
+
 
                                     <form action="{{ route('intake_sheets.destroy', $sheet) }}" method="POST"
                                         class="d-inline">
@@ -152,12 +151,8 @@
                                         @method('DELETE')
 
                                         <button type="button" class="btn btn-danger btn-sm" data-confirm
-<<<<<<< HEAD
                                             data-title="¿Eliminar hoja de ingreso?"
                                             data-text="La hoja de ingresoserá eliminado definitivamente"
-=======
-                                            data-title="¿Eliminar hoja de ingreso?" data-text="La hoja de ingresoserá eliminado definitivamente"
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                                             data-confirm="Sí, eliminar">
                                             <i class="fas fa-trash"></i>
                                         </button>

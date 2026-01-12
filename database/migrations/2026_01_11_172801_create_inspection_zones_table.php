@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('work_orders', function (Blueprint $table) {
-            $table->dropForeign(['vehicle_id']);
-            $table->dropColumn('vehicle_id');
+        Schema::create('inspection_zones', function (Blueprint $table) {
+            $table->id();
+            $table->string('code')->unique(); // frontal, right, left, rear, roof
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -22,10 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('work_orders', function (Blueprint $table) {
-            $table->foreignId('vehicle_id')
-                ->constrained('vehicles')
-                ->cascadeOnDelete();
-        });
+        Schema::dropIfExists('inspection_zones');
     }
 };

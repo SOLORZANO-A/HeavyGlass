@@ -25,42 +25,44 @@
                     <?php endif; ?>
 
                     
-                    <select name="proforma_id" id="proforma_select"
-                        class="form-control select2 <?php $__errorArgs = ['proforma_id'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" required>
+                    <div class="form-group">
+                        <label>Proforma</label>
+                        <select name="proforma_id" id="proforma_select" class="form-control" required>
 
-                        <option value="">-- Seleccione Proforma --</option>
+                            <option value="">-- Seleccione Proforma --</option>
 
-                        <?php $__currentLoopData = $proformas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $proforma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php
-                                $paid = $proforma->payments->where('status', 'valid')->sum('amount');
-                                $balance = round($proforma->total - $paid, 2);
-                                $isSigned = $proforma->signature_status === 'signed';
-                            ?>
+                            <?php $__currentLoopData = $proformas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $proforma): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
+                                    $paid = $proforma->payments->where('status', 'valid')->sum('amount');
 
-                            <option value="<?php echo e($proforma->id); ?>" data-total="<?php echo e($proforma->total); ?>"
-                                data-paid="<?php echo e($paid); ?>" data-balance="<?php echo e($balance); ?>"
-                                <?php echo e(!$isSigned ? 'disabled' : ''); ?>>
+                                    $balance = round($proforma->total - $paid, 2);
 
-                                #<?php echo e($proforma->id); ?> — <?php echo e($proforma->vehicle_plate); ?>
+                                    $isSigned = $proforma->signature_status === 'signed';
+                                ?>
 
-                                <?php if(!$isSigned): ?>
-                                    ❌ (No firmada)
-                                <?php elseif($balance <= 0): ?>
-                                    ✅ (Pagada)
-                                <?php else: ?>
-                                    💰 (Saldo: $<?php echo e(number_format($balance, 2)); ?>)
-                                <?php endif; ?>
-                            </option>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select>
+                                <option value="<?php echo e($proforma->id); ?>" data-total="<?php echo e($proforma->total); ?>"
+                                    data-paid="<?php echo e($paid); ?>" data-balance="<?php echo e($balance); ?>"
+                                    <?php echo e(!$isSigned ? 'disabled' : ''); ?>>
 
+                                    #<?php echo e($proforma->id); ?> — <?php echo e($proforma->vehicle_plate); ?>
+
+
+                                    <?php if(!$isSigned): ?>
+                                        ❌ (No firmada)
+                                    <?php elseif($balance <= 0): ?>
+                                        ✅ (Pagada)
+                                    <?php else: ?>
+                                        💰 (Saldo: $<?php echo e(number_format($balance, 2)); ?>)
+                                    <?php endif; ?>
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+
+                        <small class="form-text text-muted mt-1">
+                            ⚠️ Solo se pueden registrar pagos para proformas <strong>firmadas por el cliente</strong>.
+                        </small>
+
+                    </div>
 
                     
                     <div class="row mt-3">

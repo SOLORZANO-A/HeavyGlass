@@ -7,7 +7,6 @@
 
         <div class="card">
             <div class="card-header">
-<<<<<<< HEAD
                 <h3 class="card-title">
                     <i class="fas fa-file-invoice"></i> Proformas
                 </h3>
@@ -38,19 +37,6 @@
 
             <div class="card-body table-responsive p-0">
                 <table id="proformas-table" class="table table-hover text-nowrap">
-=======
-                <h3 class="card-title">Proformas</h3>
-
-                <div class="card-tools">
-                    <a href="{{ route('proformas.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Nueva Proforma
-                    </a>
-                </div>
-            </div>
-
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <thead>
                         <tr>
                             <th>ID</th>

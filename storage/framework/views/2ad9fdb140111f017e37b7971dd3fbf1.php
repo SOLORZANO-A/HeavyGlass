@@ -1,22 +1,21 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Detalle de Proforma'); ?>
 
-@section('title', 'Detalle de Proforma')
-
-@section('content')
-    @php
+<?php $__env->startSection('content'); ?>
+    <?php
         use Illuminate\Support\Facades\Storage;
-    @endphp
+    ?>
 
     <div class="container-fluid">
 
         <div class="card card-info">
             <div class="card-header">
                 <h3 class="card-title">
-                    Proforma #{{ $proforma->id }}
+                    Proforma #<?php echo e($proforma->id); ?>
+
                 </h3>
 
                 <div class="card-tools">
-                    <a href="{{ route('proformas.index') }}" class="btn btn-secondary btn-sm">
+                    <a href="<?php echo e(route('proformas.index')); ?>" class="btn btn-secondary btn-sm">
                         Volver
                     </a>
                 </div>
@@ -24,54 +23,58 @@
 
             <div class="card-body">
 
-                {{-- ================== DATOS GENERALES ================== --}}
+                
                 <table class="table table-bordered mb-4">
                     <tr>
                         <th width="250">Orden de trabajo</th>
                         <td>
-                            @if ($proforma->workOrder)
-                                #{{ $proforma->workOrder->id }} —
-                                {{ $proforma->vehicle_plate }}
-                            @else
+                            <?php if($proforma->workOrder): ?>
+                                #<?php echo e($proforma->workOrder->id); ?> —
+                                <?php echo e($proforma->vehicle_plate); ?>
+
+                            <?php else: ?>
                                 <span class="text-muted">No asignada</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
                     <tr>
                         <th>Cliente</th>
-                        <td>{{ $proforma->client_name }}</td>
+                        <td><?php echo e($proforma->client_name); ?></td>
                     </tr>
 
                     <tr>
                         <th>Documento</th>
-                        <td>{{ $proforma->client_document }}</td>
+                        <td><?php echo e($proforma->client_document); ?></td>
                     </tr>
 
                     <tr>
                         <th>Teléfono</th>
-                        <td>{{ $proforma->client_phone }}</td>
+                        <td><?php echo e($proforma->client_phone); ?></td>
                     </tr>
 
                     <tr>
                         <th>Email</th>
-                        <td>{{ $proforma->client_email }}</td>
+                        <td><?php echo e($proforma->client_email); ?></td>
                     </tr>
 
                     <tr>
                         <th>Vehículo</th>
                         <td>
-                            {{ $proforma->vehicle_brand }}
-                            {{ $proforma->vehicle_model }}
-                            ({{ $proforma->vehicle_plate }})
+                            <?php echo e($proforma->vehicle_brand); ?>
+
+                            <?php echo e($proforma->vehicle_model); ?>
+
+                            (<?php echo e($proforma->vehicle_plate); ?>)
                         </td>
                     </tr>
 
                     <tr>
                         <th>Estado de la proforma</th>
                         <td>
-                            <span class="badge badge-{{ $proforma->status === 'paid' ? 'success' : 'warning' }}">
-                                {{ ucfirst($proforma->status) }}
+                            <span class="badge badge-<?php echo e($proforma->status === 'paid' ? 'success' : 'warning'); ?>">
+                                <?php echo e(ucfirst($proforma->status)); ?>
+
                             </span>
                         </td>
                     </tr>
@@ -79,22 +82,22 @@
                     <tr>
                         <th>Firma del cliente</th>
                         <td>
-                            @if ($proforma->isSigned())
+                            <?php if($proforma->isSigned()): ?>
                                 <span class="badge badge-success">Firmada</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge badge-danger">Pendiente</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
                     <tr>
                         <th>Observaciones</th>
-                        <td>{{ $proforma->observations ?? '—' }}</td>
+                        <td><?php echo e($proforma->observations ?? '—'); ?></td>
                     </tr>
                 </table>
 
-                {{-- ================== DETALLES DE LA PROFORMA ================== --}}
-                {{-- ================= REPUESTOS ================= --}}
+                
+                
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-dark text-white d-flex align-items-center">
                         <i class="fas fa-box mr-2"></i>
@@ -111,23 +114,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($proforma->details->where('type', 'part') as $detail)
+                                <?php $__currentLoopData = $proforma->details->where('type', 'part'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $detail->item_description }}</td>
-                                        <td class="text-center">${{ number_format($detail->unit_price, 2) }}</td>
-                                        <td class="text-center">{{ $detail->quantity }}</td>
+                                        <td><?php echo e($detail->item_description); ?></td>
+                                        <td class="text-center">$<?php echo e(number_format($detail->unit_price, 2)); ?></td>
+                                        <td class="text-center"><?php echo e($detail->quantity); ?></td>
                                         <td class="text-end font-weight-bold">
-                                            ${{ number_format($detail->line_total, 2) }}
+                                            $<?php echo e(number_format($detail->line_total, 2)); ?>
+
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
 
                     </div>
                 </div>
 
-                {{-- ================= MANO DE OBRA ================= --}}
+                
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-dark text-white d-flex align-items-center">
                         <i class="fas fa-tools mr-2"></i>
@@ -144,23 +148,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($proforma->details->where('type', 'labor') as $detail)
+                                <?php $__currentLoopData = $proforma->details->where('type', 'labor'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $detail->item_description }}</td>
-                                        <td class="text-center">${{ number_format($detail->unit_price, 2) }}</td>
-                                        <td class="text-center">{{ $detail->quantity }}</td>
+                                        <td><?php echo e($detail->item_description); ?></td>
+                                        <td class="text-center">$<?php echo e(number_format($detail->unit_price, 2)); ?></td>
+                                        <td class="text-center"><?php echo e($detail->quantity); ?></td>
                                         <td class="text-end font-weight-bold">
-                                            ${{ number_format($detail->line_total, 2) }}
+                                            $<?php echo e(number_format($detail->line_total, 2)); ?>
+
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
 
                     </div>
                 </div>
 
-                {{-- ================= TOTALES ================= --}}
+                
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-dark text-white d-flex align-items-center">
                         <i class="fas fa-dollar-sign mr-2"></i>
@@ -171,16 +176,17 @@
                             <tbody>
                                 <tr>
                                     <th class="text-end text-muted">Subtotal</th>
-                                    <td class="text-end">${{ number_format($proforma->subtotal, 2) }}</td>
+                                    <td class="text-end">$<?php echo e(number_format($proforma->subtotal, 2)); ?></td>
                                 </tr>
                                 <tr>
                                     <th class="text-end text-muted">IVA (15%)</th>
-                                    <td class="text-end">${{ number_format($proforma->tax, 2) }}</td>
+                                    <td class="text-end">$<?php echo e(number_format($proforma->tax, 2)); ?></td>
                                 </tr>
                                 <tr class="bg-success text-white">
                                     <th class="text-end h5 mb-0">TOTAL</th>
                                     <td class="text-end h5 mb-0">
-                                        ${{ number_format($proforma->total, 2) }}
+                                        $<?php echo e(number_format($proforma->total, 2)); ?>
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -189,14 +195,14 @@
                     </div>
                 </div>
 
-                {{-- ================== FIRMA DEL CLIENTE ================== --}}
-                {{-- ================== FIRMA DEL CLIENTE ================== --}}
+                
+                
                 <hr>
                 <h5>Firma del Cliente</h5>
 
-                @if ($proforma->isSigned())
+                <?php if($proforma->isSigned()): ?>
                     <div class="mt-2">
-                        <img src="{{ Storage::url($proforma->signature_path) }}?v={{ $proforma->updated_at->timestamp }}"
+                        <img src="<?php echo e(Storage::url($proforma->signature_path)); ?>?v=<?php echo e($proforma->updated_at->timestamp); ?>"
                             alt="Firma del cliente" class="img-fluid"
                             style="
         max-width: 400px;
@@ -207,9 +213,9 @@
     ">
 
                     </div>
-                @else
-                    <form id="signature-form" action="{{ route('proformas.sign', $proforma) }}" method="POST">
-                        @csrf
+                <?php else: ?>
+                    <form id="signature-form" action="<?php echo e(route('proformas.sign', $proforma)); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
 
                         <canvas id="signature-pad"
                             style="border:1px solid #ccc; width:100%; height:200px; background:#fff;">
@@ -229,15 +235,15 @@
 
                         </div>
                     </form>
-                @endif
+                <?php endif; ?>
 
 
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -332,5 +338,7 @@
             };
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\HeavyGlass-main\resources\views/proformas/show.blade.php ENDPATH**/ ?>

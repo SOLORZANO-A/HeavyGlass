@@ -52,4 +52,8 @@ class IntakeSheet extends Model
     {
         return $this->hasMany(WorkOrder::class);
     }
+    public function inspection()
+    {
+        return $this->hasOne(IntakeInspection::class);
+    }
 }

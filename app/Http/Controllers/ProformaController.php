@@ -61,13 +61,18 @@ class ProformaController extends Controller
         $client  = $vehicle->client;
 
         // 🔢 Calcular totales
-        $subtotal = collect($data['details'])->sum(
-            fn($item) =>
-            $item['price'] * $item['quantity']
+        $itemsSubtotal = collect($data['details'])->sum(
+            fn($item) => ($item['price'] ?? 0) * ($item['quantity'] ?? 1)
         );
 
-        $tax   = round($subtotal * 0.15, 2);
-        $total = round($subtotal + $tax, 2);
+        $laborSubtotal = collect($request->labor ?? [])->sum(
+            fn($item) => ($item['price'] ?? 0) * ($item['quantity'] ?? 1)
+        );
+
+        $subtotal = $itemsSubtotal + $laborSubtotal;
+        $tax      = round($subtotal * 0.15, 2);
+        $total    = round($subtotal + $tax, 2);
+
 
         // 🧾 Crear proforma (NO firmada todavía)
         $proforma = Proforma::create([
@@ -103,9 +108,24 @@ class ProformaController extends Controller
                 'quantity'         => $detail['quantity'],
                 'unit_price'       => $detail['price'],
                 'line_total'       => $detail['price'] * $detail['quantity'],
-                'notes'            => null,
+                'type'             => 'part',
             ]);
         }
+
+        // MANO DE OBRA
+        if ($request->has('labor')) {
+            foreach ($request->labor as $item) {
+                $proforma->details()->create([
+                    'item_description' => $item['description'],
+                    'quantity'         => $item['quantity'] ?? 1,
+                    'unit_price'       => $item['price'] ?? 0,
+                    'line_total'       => ($item['price'] ?? 0) * ($item['quantity'] ?? 1),
+                    'type'             => 'labor',
+                ]);
+            }
+        }
+
+
 
         return redirect()
             ->route('proformas.show', $proforma)
@@ -233,5 +253,43 @@ class ProformaController extends Controller
         ]);
 
         return back()->with('success', 'Proforma firmada correctamente');
+    }
+
+    public function inspectionData(WorkOrder $workOrder)
+    {
+        $inspection = $workOrder
+            ->intakeSheet
+            ->inspection;
+
+        if (!$inspection) {
+            return response()->json([]);
+        }
+
+        $items = $inspection->items
+            ->where(function ($q) {
+                return $q->change
+                    || $q->paint
+                    || $q->fiber
+                    || $q->dent
+                    || $q->crack;
+            })
+            ->map(function ($item) {
+
+                $actions = [];
+
+                if ($item->change) $actions[] = 'Cambio';
+                if ($item->paint)  $actions[] = 'Pintura';
+                if ($item->fiber)  $actions[] = 'Fibra';
+                if ($item->dent)   $actions[] = 'Enderezado';
+                if ($item->crack)  $actions[] = 'Fisura';
+
+                return [
+                    'description' =>
+                    $item->part->name . ' (' . implode(', ', $actions) . ')'
+                ];
+            })
+            ->values();
+
+        return response()->json($items);
     }
 }

@@ -194,4 +194,46 @@ class WorkOrderController extends Controller
             ->route('work_orders.index')
             ->with('success', 'Work Order deleted successfully');
     }
+
+
+
+
+    public function inspectionData(WorkOrder $workOrder)
+    {
+        $inspection = $workOrder->intakeSheet?->inspection;
+
+        if (!$inspection) {
+            return response()->json([]);
+        }
+
+        $items = $inspection->items
+            ->where(function ($item) {
+                return $item->change ||
+                    $item->paint ||
+                    $item->fiber ||
+                    $item->dent ||
+                    $item->crack;
+            })
+            ->map(function ($item) {
+
+                $actions = [];
+
+                if ($item->change) $actions[] = 'Cambio';
+                if ($item->paint)  $actions[] = 'Pintura';
+                if ($item->fiber)  $actions[] = 'Fibra';
+                if ($item->dent)   $actions[] = 'Enderezado';
+                if ($item->crack)  $actions[] = 'Fisura';
+
+                return [
+                    'description' =>
+                    $item->zone->name .
+                        ' - ' .
+                        $item->part->name .
+                        ' (' . implode(', ', $actions) . ')',
+                ];
+            })
+            ->values();
+
+        return response()->json($items);
+    }
 }

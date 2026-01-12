@@ -1,22 +1,21 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Intake Sheet Details'); ?>
 
-@section('title', 'Intake Sheet Details')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container-fluid">
 
         <div class="card card-info">
             <div class="card-header">
                 <h3 class="card-title">
-                    Hoja de Ingreso #{{ $intakeSheet->id }}
+                    Hoja de Ingreso #<?php echo e($intakeSheet->id); ?>
+
                 </h3>
 
                 <div class="card-tools">
-                    <a href="{{ route('intake_sheets.edit', $intakeSheet) }}" class="btn btn-warning btn-sm">
+                    <a href="<?php echo e(route('intake_sheets.edit', $intakeSheet)); ?>" class="btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </a>
 
-                    <a href="{{ route('intake_sheets.index') }}" class="btn btn-secondary btn-sm">
+                    <a href="<?php echo e(route('intake_sheets.index')); ?>" class="btn btn-secondary btn-sm">
                         Volver
                     </a>
                 </div>
@@ -26,102 +25,106 @@
 
                 <table class="table table-bordered">
 
-                    {{-- VEHÍCULO --}}
+                    
                     <tr>
                         <th width="250">Vehículo</th>
                         <td>
-                            {{ $intakeSheet->vehicle?->plate ?? '—' }} —
-                            {{ $intakeSheet->vehicle?->brand ?? '' }}
-                            {{ $intakeSheet->vehicle?->model ?? '' }}
+                            <?php echo e($intakeSheet->vehicle?->plate ?? '—'); ?> —
+                            <?php echo e($intakeSheet->vehicle?->brand ?? ''); ?>
+
+                            <?php echo e($intakeSheet->vehicle?->model ?? ''); ?>
+
                         </td>
                     </tr>
 
-                    {{-- CLIENTE --}}
+                    
                     <tr>
                         <th>Cliente</th>
                         <td>
-                            {{ $intakeSheet->vehicle?->client?->fullName() ?? '—' }}
+                            <?php echo e($intakeSheet->vehicle?->client?->fullName() ?? '—'); ?>
+
                         </td>
                     </tr>
 
-                    {{-- FECHA INGRESO --}}
+                    
                     <tr>
                         <th>Fecha de Ingreso</th>
                         <td>
-                            {{ $intakeSheet->entry_at ? $intakeSheet->entry_at->format('Y-m-d H:i') : '—' }}
+                            <?php echo e($intakeSheet->entry_at ? $intakeSheet->entry_at->format('Y-m-d H:i') : '—'); ?>
+
                         </td>
                     </tr>
 
-                    {{-- KM --}}
+                    
                     <tr>
                         <th>Kilometraje</th>
-                        <td>{{ $intakeSheet->km_at_entry ?? '—' }}</td>
+                        <td><?php echo e($intakeSheet->km_at_entry ?? '—'); ?></td>
                     </tr>
 
-                    {{-- COMBUSTIBLE --}}
+                    
                     <tr>
                         <th>Nivel de Combustible</th>
-                        <td>{{ ucfirst($intakeSheet->fuel_level ?? '—') }}</td>
+                        <td><?php echo e(ucfirst($intakeSheet->fuel_level ?? '—')); ?></td>
                     </tr>
 
-                    {{-- CONDICIÓN --}}
+                    
                     <tr>
                         <th>Condición del Vehículo</th>
                         <td>
-                            @if ($intakeSheet->has_dents)
+                            <?php if($intakeSheet->has_dents): ?>
                                 <span class="badge badge-warning">Abolladuras</span>
-                            @endif
+                            <?php endif; ?>
 
-                            @if ($intakeSheet->has_scratches)
+                            <?php if($intakeSheet->has_scratches): ?>
                                 <span class="badge badge-info">Arañazos</span>
-                            @endif
+                            <?php endif; ?>
 
-                            @if ($intakeSheet->has_cracks)
+                            <?php if($intakeSheet->has_cracks): ?>
                                 <span class="badge badge-danger">Grietas</span>
-                            @endif
+                            <?php endif; ?>
 
-                            @if (!$intakeSheet->has_dents && !$intakeSheet->has_scratches && !$intakeSheet->has_cracks)
+                            <?php if(!$intakeSheet->has_dents && !$intakeSheet->has_scratches && !$intakeSheet->has_cracks): ?>
                                 <span class="text-muted">Sin daños visibles</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
-                    {{-- OBJETOS DE VALOR --}}
+                    
                     <tr>
                         <th>Objetos de Valor</th>
-                        <td>{{ $intakeSheet->valuables ?? '—' }}</td>
+                        <td><?php echo e($intakeSheet->valuables ?? '—'); ?></td>
                     </tr>
 
-                    {{-- OBSERVACIONES --}}
+                    
                     <tr>
                         <th>Observaciones</th>
-                        <td>{{ $intakeSheet->observations ?? '—' }}</td>
+                        <td><?php echo e($intakeSheet->observations ?? '—'); ?></td>
                     </tr>
 
-                    {{-- FOTOS --}}
+                    
                     <tr>
                         <th>Fotos del Vehículo</th>
                         <td>
-                            @if ($intakeSheet->photos && $intakeSheet->photos->count())
+                            <?php if($intakeSheet->photos && $intakeSheet->photos->count()): ?>
                                 <div class="row">
-                                    @foreach ($intakeSheet->photos as $photo)
+                                    <?php $__currentLoopData = $intakeSheet->photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="col-md-3 mb-3">
-                                            <a href="{{ asset('storage/' . $photo->path) }}" target="_blank">
-                                                <img src="{{ asset('storage/' . $photo->path) }}"
+                                            <a href="<?php echo e(asset('storage/' . $photo->path)); ?>" target="_blank">
+                                                <img src="<?php echo e(asset('storage/' . $photo->path)); ?>"
                                                     class="img-fluid img-thumbnail" alt="Foto vehículo">
                                             </a>
                                         </div>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <span class="text-muted">No hay fotos registradas</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
                 </table>
-                {{-- ================= INSPECCIÓN VEHICULAR ================= --}}
-                @if ($intakeSheet->inspection)
+                
+                <?php if($intakeSheet->inspection): ?>
 
                     <hr>
                     <h4 class="mt-4 mb-3">
@@ -130,18 +133,20 @@
 
                     <p class="text-muted">
                         Registrada el
-                        {{ $intakeSheet->inspection->created_at->format('d/m/Y H:i') }}
-                        por {{ $intakeSheet->inspection->createdBy?->name ?? 'Sistema' }}
+                        <?php echo e($intakeSheet->inspection->created_at->format('d/m/Y H:i')); ?>
+
+                        por <?php echo e($intakeSheet->inspection->createdBy?->name ?? 'Sistema'); ?>
+
                     </p>
 
-                    @foreach ($intakeSheet->inspection->items->groupBy('inspection_zone_id') as $zoneItems)
-                        @php
+                    <?php $__currentLoopData = $intakeSheet->inspection->items->groupBy('inspection_zone_id'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zoneItems): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
                             $zone = $zoneItems->first()->zone;
-                        @endphp
+                        ?>
 
                         <div class="card mb-3">
                             <div class="card-header bg-light">
-                                <strong>{{ $zone->name }}</strong>
+                                <strong><?php echo e($zone->name); ?></strong>
                             </div>
 
                             <div class="card-body p-0">
@@ -157,113 +162,115 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($zoneItems as $item)
+                                        <?php $__currentLoopData = $zoneItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td>{{ $item->part->name }}</td>
+                                                <td><?php echo e($item->part->name); ?></td>
                                                 <td class="text-center">
-                                                    @if ($item->change)
+                                                    <?php if($item->change): ?>
                                                         <span class="badge badge-success">✔</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="text-muted">—</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if ($item->paint)
+                                                    <?php if($item->paint): ?>
                                                         <span class="badge badge-success">✔</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="text-muted">—</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if ($item->fiber)
+                                                    <?php if($item->fiber): ?>
                                                         <span class="badge badge-success">✔</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="text-muted">—</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if ($item->dent)
+                                                    <?php if($item->dent): ?>
                                                         <span class="badge badge-success">✔</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="text-muted">—</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if ($item->crack)
+                                                    <?php if($item->crack): ?>
                                                         <span class="badge badge-success">✔</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="text-muted">—</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
 
-                            {{-- OBSERVACIONES POR ZONA --}}
-                            @php
+                            
+                            <?php
                                 $zoneNotes = $zoneItems->pluck('notes')->filter()->unique();
-                            @endphp
+                            ?>
 
-                            @if ($zoneNotes->count())
+                            <?php if($zoneNotes->count()): ?>
                                 <div class="card-footer">
                                     <strong>Observaciones:</strong>
                                     <ul class="mb-0">
-                                        @foreach ($zoneNotes as $note)
-                                            <li>{{ $note }}</li>
-                                        @endforeach
+                                        <?php $__currentLoopData = $zoneNotes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <li><?php echo e($note); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
 
-                            {{-- FOTOS POR ZONA --}}
-                            @php
+                            
+                            <?php
                                 $photos = $intakeSheet->inspection->photos->where('inspection_zone_id', $zone->id);
-                            @endphp
+                            ?>
 
-                            @if ($photos->count())
+                            <?php if($photos->count()): ?>
                                 <div class="card-footer">
-                                    <strong>Fotos de {{ $zone->name }}</strong>
+                                    <strong>Fotos de <?php echo e($zone->name); ?></strong>
                                     <div class="row mt-2">
-                                        @foreach ($photos as $photo)
+                                        <?php $__currentLoopData = $photos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="col-md-2 col-4 mb-2">
-                                                <a href="{{ asset('storage/' . $photo->path) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $photo->path) }}"
+                                                <a href="<?php echo e(asset('storage/' . $photo->path)); ?>" target="_blank">
+                                                    <img src="<?php echo e(asset('storage/' . $photo->path)); ?>"
                                                         class="img-fluid rounded border">
                                                 </a>
                                             </div>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
 
 
                         </div>
-                    @endforeach
-                @else
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php else: ?>
                     <div class="alert alert-warning mt-4">
                         <i class="fas fa-exclamation-triangle"></i>
                         Esta hoja de ingreso aún no tiene una inspección vehicular registrada.
                     </div>
-                @endif
+                <?php endif; ?>
 
 
 
             </div>
 
             <div class="card-footer">
-                <a href="{{ route('intake_sheets.index') }}" class="btn btn-secondary">
+                <a href="<?php echo e(route('intake_sheets.index')); ?>" class="btn btn-secondary">
                     Volver al listado
                 </a>
             </div>
         </div>
 
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\HeavyGlass-main\resources\views/intake_sheets/show.blade.php ENDPATH**/ ?>

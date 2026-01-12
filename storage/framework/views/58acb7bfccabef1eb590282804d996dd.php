@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Nueva Proforma'); ?>
 
-@section('title', 'Nueva Proforma')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container-fluid">
 
         <div class="card card-primary">
@@ -10,30 +8,33 @@
                 <h3 class="card-title">Crear Proforma</h3>
             </div>
 
-            <form action="{{ route('proformas.store') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('proformas.store')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
 
                 <div class="card-body">
 
-                    {{-- ORDEN DE TRABAJO --}}
+                    
                     <div class="form-group">
                         <label>Orden de trabajo</label>
                         <select name="work_order_id" id="work_order_select" class="form-control select2" required>
                             <option value="">-- Seleccione una Orden de Trabajo --</option>
-                            @foreach ($workOrders as $order)
-                                <option value="{{ $order->id }}">
-                                    #{{ $order->id }} —
-                                    {{ $order->intakeSheet->vehicle->plate }}
-                                    | {{ $order->intakeSheet->vehicle->brand }}
-                                    {{ $order->intakeSheet->vehicle->model }}
+                            <?php $__currentLoopData = $workOrders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($order->id); ?>">
+                                    #<?php echo e($order->id); ?> —
+                                    <?php echo e($order->intakeSheet->vehicle->plate); ?>
+
+                                    | <?php echo e($order->intakeSheet->vehicle->brand); ?>
+
+                                    <?php echo e($order->intakeSheet->vehicle->model); ?>
+
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
 
                     <hr>
 
-                    {{-- DETALLES --}}
+                    
                     <h5>Detalles de la Proforma</h5>
 
                     <div id="details-wrapper"></div>
@@ -56,7 +57,7 @@
 
 
 
-                    {{-- OBSERVACIONES --}}
+                    
                     <div class="form-group">
                         <label>Observaciones</label>
                         <textarea name="observations" class="form-control" rows="3"></textarea>
@@ -65,7 +66,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <a href="{{ route('proformas.index') }}" class="btn btn-secondary">
+                    <a href="<?php echo e(route('proformas.index')); ?>" class="btn btn-secondary">
                         Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
@@ -77,9 +78,9 @@
         </div>
 
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         let detailIndex = 0;
 
@@ -205,10 +206,10 @@
             laborIndex++;
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <style>
         /* Contenedor */
         .select2-container--default .select2-selection--single {
@@ -253,4 +254,6 @@
             border-radius: .375rem;
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\HeavyGlass-main\resources\views/proformas/create.blade.php ENDPATH**/ ?>

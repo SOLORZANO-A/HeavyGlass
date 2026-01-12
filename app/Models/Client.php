@@ -18,10 +18,7 @@ class Client extends Model
     'client_type',
     'description',
     'id_copy_path',
-<<<<<<< HEAD
     'reference_number'
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
 ];
 
 

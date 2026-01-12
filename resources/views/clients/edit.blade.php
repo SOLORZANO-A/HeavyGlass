@@ -104,14 +104,11 @@
                                value="{{ old('address', $client->address) }}">
                     </div>
 
-<<<<<<< HEAD
                      <div class="form-group">
                         <label>Numero de referencia</label>
                         <input type="text" name="reference_number" class="form-control" value="{{ old('reference_number', $client->reference_number) }}">
                     </div>
 
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     {{-- TIPO DE CLIENTE --}}
                     <div class="form-group">
                         <label>Tipo de cliente</label>

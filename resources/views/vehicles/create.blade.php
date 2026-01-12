@@ -76,7 +76,6 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-<<<<<<< HEAD
                                 <label>Numero de motor</label>
                                 <input type="text" name="engine_number" class="form-control" value="{{ old('engine_number') }}">
                             </div>
@@ -92,8 +91,6 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                                 <label>Color</label>
                                 <input type="text" name="color" class="form-control" value="{{ old('color') }}">
                             </div>

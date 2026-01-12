@@ -75,14 +75,11 @@
                     </div>
 
                     <div class="form-group">
-<<<<<<< HEAD
                         <label>Numero de referencia</label>
                         <input type="text" name="reference_number" class="form-control" value="{{ old('reference_number') }}">
                     </div>
 
                     <div class="form-group">
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                         <label>Tipo de cliente</label>
                         <select name="client_type" class="form-control @error('client_type') is-invalid @enderror">
                             <option value="">-- Selecciona --</option>
@@ -92,12 +89,9 @@
                             <option value="third" {{ old('client_type') == 'third' ? 'selected' : '' }}>
                                 Tercero "No dueño"
                             </option>
-<<<<<<< HEAD
                             <option value="insurance" {{ old('client_type') == 'insurance' ? 'selected' : '' }}>
                                 Aseguradora
                             </option>
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                         </select>
                         @error('client_type')
                             <span class="invalid-feedback">{{ $message }}</span>

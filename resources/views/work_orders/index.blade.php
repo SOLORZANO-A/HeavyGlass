@@ -6,7 +6,6 @@
     <div class="container-fluid">
 
         <div class="card">
-<<<<<<< HEAD
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-tools"></i> Órdenes de Taller
@@ -38,18 +37,6 @@
 
             <div class="card-body table-responsive p-0">
                 <table id="workorders-table" class="table table-hover text-nowrap">
-=======
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Órdenes de taller</h3>
-
-                <a href="{{ route('work_orders.create') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> Nueva orden de trabajo
-                </a>
-            </div>
-
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
                     <thead>
                         <tr>
                             <th>ID</th>

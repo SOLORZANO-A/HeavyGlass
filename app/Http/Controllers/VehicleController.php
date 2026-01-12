@@ -37,12 +37,9 @@ class VehicleController extends Controller
             'engine'    => 'nullable|string|max:50',
             'mileage'   => 'nullable|integer|min:0',
             'description' => 'nullable|string',
-<<<<<<< HEAD
             'engine_number' => 'nullable|string|max:255',
             'chassis_number' => 'nullable|string|max:255',
 
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
         ]);
 
         Vehicle::create($data);
@@ -80,12 +77,9 @@ class VehicleController extends Controller
             'engine'    => 'nullable|string|max:50',
             'mileage'   => 'nullable|integer|min:0',
             'description' => 'nullable|string',
-<<<<<<< HEAD
             'engine_number' => 'nullable|string|max:255',
             'chassis_number' => 'nullable|string|max:255',
 
-=======
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
         ]);
 
         $vehicle->update($data);

@@ -11,6 +11,9 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicVehicleStatusController;
+use App\Http\Controllers\IntakeInspectionController;
+use App\Http\Controllers\IntakeInspectionItemController;
+use App\Http\Controllers\IntakeInspectionPhotoController;
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -201,4 +204,60 @@ Route::get('/consulta-vehiculo', function () {
 Route::get('/consulta-vehiculo/buscar', 
     [PublicVehicleStatusController::class, 'search']
 )->name('public.search');
+
+
+
+Route::middleware(['auth'])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | INSPECCIÓN DE INGRESO DE VEHÍCULO
+    |--------------------------------------------------------------------------
+    */
+    Route::get(
+        'intake-sheets/{intakeSheet}/inspection',
+        [IntakeInspectionController::class, 'create']
+    )->name('intake_inspections.create');
+
+    // Crear / obtener inspección (cabecera)
+    Route::post(
+        '/intake-inspections',
+        [IntakeInspectionController::class, 'store']
+    )->name('intake_inspections.store');
+
+    // Actualizar inspección (observaciones / estado)
+    Route::put(
+        '/intake-inspections/{intakeInspection}',
+        [IntakeInspectionController::class, 'update']
+    )->name('intake_inspections.update');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECKLIST POR PIEZA
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/intake-inspection-items',
+        [IntakeInspectionItemController::class, 'store']
+    )->name('intake_inspection_items.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | FOTOS POR ZONA
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/intake-inspection-photos',
+        [IntakeInspectionPhotoController::class, 'store']
+    )->name('intake_inspection_photos.store');
+
+});
+Route::get(
+    '/work-orders/{workOrder}/inspection-data',
+    [\App\Http\Controllers\ProformaController::class, 'inspectionData']
+)->name('work_orders.inspection_data');
+
+
 

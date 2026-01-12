@@ -15,6 +15,7 @@ class ProformaDetail extends Model
         'unit_price',
         'line_total',
         'notes',
+        'type',
     ];
 
     // RELATIONSHIPS

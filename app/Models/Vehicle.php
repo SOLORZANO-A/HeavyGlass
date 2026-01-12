@@ -6,18 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
     protected $table = 'vehicles';
 
     protected $fillable = [
         'client_id',
         'brand',
         'model',
-<<<<<<< HEAD
         'plate',
         'year',
         'color',
@@ -31,19 +25,6 @@ class Vehicle extends Model
     ];
 
 
-=======
-        'color',
-        'year',
-        'plate',
-        'vin',
-        'chassis',
-        'engine',
-        'mileage',
-        'status_id',
-        'description',
-    ];
-
->>>>>>> 964613b02c73302aea2dc33386313b314db28634
     // RELATIONSHIPS
     public function client()
     {

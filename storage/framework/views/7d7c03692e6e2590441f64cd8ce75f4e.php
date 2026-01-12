@@ -4,16 +4,37 @@
     <div class="container-fluid">
 
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Órdenes de taller</h3>
-
-                <a href="<?php echo e(route('work_orders.create')); ?>" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus"></i> Nueva orden de trabajo
-                </a>
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-tools"></i> Órdenes de Taller
+                </h3>
             </div>
 
+            <div class="row mb-3 align-items-center">
+
+                <!-- Buscador -->
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Buscar por orden, vehículo o técnico..."
+                            data-table-filter="workorders-table">
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div class="col-md-4 text-end">
+                    <a href="<?php echo e(route('work_orders.create')); ?>" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Nueva Orden de Trabajo
+                    </a>
+                </div>
+
+            </div>
+
+
             <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+                <table id="workorders-table" class="table table-hover text-nowrap">
                     <thead>
                         <tr>
                             <th>ID</th>

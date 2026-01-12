@@ -135,6 +135,19 @@
                                     <a href="<?php echo e(route('intake_sheets.edit', $sheet)); ?>" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <?php if(!$sheet->inspection): ?>
+                                        <a href="<?php echo e(route('intake_inspections.create', $sheet)); ?>"
+                                            class="btn btn-info btn-sm" title="Registrar inspección">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="badge badge-success" title="Inspección registrada">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    <?php endif; ?>
+
+
+
 
                                     <form action="<?php echo e(route('intake_sheets.destroy', $sheet)); ?>" method="POST"
                                         class="d-inline">

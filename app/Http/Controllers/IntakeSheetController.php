@@ -30,78 +30,84 @@ class IntakeSheetController extends Controller
     }
 
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'vehicle_id'    => 'required|exists:vehicles,id',
-        'entry_at'      => 'nullable|date',
-        'km_at_entry'   => 'nullable|integer|min:0',
-        'fuel_level'    => 'nullable|string|max:10',
+    {
+        $data = $request->validate([
+            'vehicle_id'    => 'required|exists:vehicles,id',
+            'entry_at'      => 'nullable|date',
+            'km_at_entry'   => 'nullable|integer|min:0',
+            'fuel_level'    => 'nullable|string|max:10',
 
-        'has_dents'     => 'nullable',
-        'has_scratches' => 'nullable',
-        'has_cracks'    => 'nullable',
+            'has_dents'     => 'nullable',
+            'has_scratches' => 'nullable',
+            'has_cracks'    => 'nullable',
 
-        'valuables'     => 'nullable|string',
-        'observations'  => 'nullable|string',
+            'valuables'     => 'nullable|string',
+            'observations'  => 'nullable|string',
 
-        // 👇 VALIDACIÓN CORRECTA PARA MÚLTIPLES FOTOS
-        'photos'        => 'nullable|array',
-        'photos.*'      => 'image|mimes:jpg,jpeg,png|max:4096',
-    ]);
-
-    FacadesDB::beginTransaction();
-
-    try {
-
-        // ✅ 1. CREAR HOJA DE INGRESO
-        $intakeSheet = IntakeSheet::create([
-            'vehicle_id'    => $data['vehicle_id'],
-            'advisor_id'    => auth()->id(),
-            'entry_at'      => $data['entry_at'] ?? now(),
-            'km_at_entry'   => $data['km_at_entry'] ?? null,
-            'fuel_level'    => $data['fuel_level'] ?? null,
-
-            // ✔️ CHECKBOX SEGUROS
-            'has_dents'     => $request->boolean('has_dents'),
-            'has_scratches' => $request->boolean('has_scratches'),
-            'has_cracks'    => $request->boolean('has_cracks'),
-
-            'valuables'     => $data['valuables'] ?? null,
-            'observations'  => $data['observations'] ?? null,
+            // 👇 VALIDACIÓN CORRECTA PARA MÚLTIPLES FOTOS
+            'photos'        => 'nullable|array',
+            'photos.*'      => 'image|mimes:jpg,jpeg,png|max:4096',
         ]);
 
-        // ✅ 2. GUARDAR FOTOS (ARCHIVO O CÁMARA)
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
+        FacadesDB::beginTransaction();
 
-                $path = $photo->store('intake_photos', 'public');
+        try {
 
-                $intakeSheet->photos()->create([
-                    'path' => $path,
-                ]);
+            // ✅ 1. CREAR HOJA DE INGRESO
+            $intakeSheet = IntakeSheet::create([
+                'vehicle_id'    => $data['vehicle_id'],
+                'advisor_id'    => auth()->id(),
+                'entry_at'      => $data['entry_at'] ?? now(),
+                'km_at_entry'   => $data['km_at_entry'] ?? null,
+                'fuel_level'    => $data['fuel_level'] ?? null,
+
+                // ✔️ CHECKBOX SEGUROS
+                'has_dents'     => $request->boolean('has_dents'),
+                'has_scratches' => $request->boolean('has_scratches'),
+                'has_cracks'    => $request->boolean('has_cracks'),
+
+                'valuables'     => $data['valuables'] ?? null,
+                'observations'  => $data['observations'] ?? null,
+            ]);
+
+            // ✅ 2. GUARDAR FOTOS (ARCHIVO O CÁMARA)
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+
+                    $path = $photo->store('intake_photos', 'public');
+
+                    $intakeSheet->photos()->create([
+                        'path' => $path,
+                    ]);
+                }
             }
+
+            DB::commit();
+
+            return redirect()
+                ->route('intake_sheets.show', $intakeSheet)
+                ->with('success', 'Hoja de ingreso creada correctamente');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withErrors('Ocurrió un error al guardar la hoja de ingreso.')
+                ->withInput();
         }
-
-        DB::commit();
-
-        return redirect()
-            ->route('intake_sheets.show', $intakeSheet)
-            ->with('success', 'Hoja de ingreso creada correctamente');
-
-    } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        return back()
-            ->withErrors('Ocurrió un error al guardar la hoja de ingreso.')
-            ->withInput();
     }
-}
 
 
     public function show(IntakeSheet $intakeSheet)
     {
-        $intakeSheet->load('vehicle.client', 'photos');
+        $intakeSheet->load([
+            'vehicle.client',
+            'photos',
+            'inspection.items.part',
+            'inspection.items.zone',
+            'inspection.photos',
+            'inspection.createdBy',
+        ]);
 
         return view('intake_sheets.show', compact('intakeSheet'));
     }
