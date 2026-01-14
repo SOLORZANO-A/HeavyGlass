@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', 'Intake Sheets'); ?>
+<?php $__env->startSection('title', 'Hojas de ingreso'); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="container-fluid">

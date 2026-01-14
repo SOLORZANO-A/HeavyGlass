@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InspectionZone;
 use App\Models\IntakePhoto;
 use App\Models\IntakeSheet;
 use App\Models\Vehicle;
@@ -9,6 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\DB;
+use App\Models\IntakeInspection;
+use App\Models\IntakeInspectionItem;
+use App\Models\IntakeInspectionPhoto;
 
 
 class IntakeSheetController extends Controller
@@ -112,49 +116,139 @@ class IntakeSheetController extends Controller
         return view('intake_sheets.show', compact('intakeSheet'));
     }
 
+
     public function edit(IntakeSheet $intakeSheet)
     {
-        return view('intake_sheets.edit', compact('intakeSheet'));
+        $zones = InspectionZone::with('parts')->get();
+
+        return view('intake_sheets.edit', compact(
+            'intakeSheet',
+            'zones'
+        ));
     }
 
     public function update(Request $request, IntakeSheet $intakeSheet)
     {
+
         $data = $request->validate([
+            // HOJA
             'entry_at'      => 'nullable|date',
             'km_at_entry'   => 'nullable|integer|min:0',
             'fuel_level'    => 'nullable|string|max:10',
-
             'valuables'     => 'nullable|string',
             'observations'  => 'nullable|string',
 
+            // FOTOS GENERALES
             'photos.*'      => 'image|max:4096',
+
+            // INSPECCIÓN
+            'inspection'                 => 'nullable|array',
+            'inspection_observations'    => 'nullable|array',
+            'inspection_photos'          => 'nullable|array',
+            'inspection_photos.*.*'      => 'image|max:5120',
         ]);
 
-        $intakeSheet->update([
-            'entry_at'      => $data['entry_at'] ?? $intakeSheet->entry_at,
-            'km_at_entry'   => $data['km_at_entry'] ?? $intakeSheet->km_at_entry,
-            'fuel_level'    => $data['fuel_level'] ?? $intakeSheet->fuel_level,
+        DB::transaction(function () use ($request, $data, $intakeSheet) {
 
-            'has_dents'     => $request->boolean('has_dents'),
-            'has_scratches' => $request->boolean('has_scratches'),
-            'has_cracks'    => $request->boolean('has_cracks'),
+            /* =====================================================
+        | 1️⃣ ACTUALIZAR HOJA DE INGRESO (LO QUE YA TENÍAS)
+        ===================================================== */
+            $intakeSheet->update([
+                'entry_at'      => $data['entry_at'] ?? $intakeSheet->entry_at,
+                'km_at_entry'   => $data['km_at_entry'] ?? $intakeSheet->km_at_entry,
+                'fuel_level'    => $data['fuel_level'] ?? $intakeSheet->fuel_level,
 
-            'valuables'     => $data['valuables'] ?? $intakeSheet->valuables,
-            'observations'  => $data['observations'] ?? $intakeSheet->observations,
-        ]);
+                'has_dents'     => $request->boolean('has_dents'),
+                'has_scratches' => $request->boolean('has_scratches'),
+                'has_cracks'    => $request->boolean('has_cracks'),
 
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $intakeSheet->photos()->create([
-                    'path' => $photo->store('intake_photos', 'public'),
+                'valuables'     => $data['valuables'] ?? $intakeSheet->valuables,
+                'observations'  => $data['observations'] ?? $intakeSheet->observations,
+            ]);
+
+            /* =====================================================
+        | 2️⃣ FOTOS GENERALES (LO QUE YA TENÍAS)
+        ===================================================== */
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $intakeSheet->photos()->create([
+                        'path' => $photo->store('intake_photos', 'public'),
+                    ]);
+                }
+            }
+
+            /* =====================================================
+        | 3️⃣ OBTENER O CREAR INSPECCIÓN
+        ===================================================== */
+            $inspection = $intakeSheet->inspection;
+
+            // 🚫 NO crear inspección si no existe
+           if (!$inspection) {
+            return;
+           }
+            /* =====================================================
+        | 4️⃣ GUARDAR CHECKLIST (ZONAS / PIEZAS)
+        ===================================================== */
+            if ($request->has('inspection')) {
+
+                // Limpiamos para evitar duplicados
+                $inspection->items()->delete();
+
+                foreach ($request->inspection as $zoneId => $parts) {
+                    foreach ($parts as $partId => $actions) {
+
+                        IntakeInspectionItem::create([
+                            'intake_inspection_id' => $inspection->id,
+                            'inspection_zone_id'   => $zoneId,
+                            'inspection_part_id'   => $partId,
+                            'change' => isset($actions['change']),
+                            'paint'  => isset($actions['paint']),
+                            'fiber'  => isset($actions['fiber']),
+                            'dent'   => isset($actions['dent']),
+                            'crack'  => isset($actions['crack']),
+                        ]);
+                    }
+                }
+            }
+
+            /* =====================================================
+        | 5️⃣ OBSERVACIONES POR ZONA
+        ===================================================== */
+            if ($request->has('inspection_observations')) {
+                $inspection->update([
+                    'observations' => $request->inspection_observations,
                 ]);
             }
-        }
+
+            // =====================
+            // FOTOS DE INSPECCIÓN
+            // =====================
+            if ($request->hasFile('inspection_photos')) {
+
+                foreach ($request->file('inspection_photos') as $zoneId => $files) {
+
+                    foreach ($files as $file) {
+
+                        $path = $file->store(
+                            'intake_inspections/' . $inspection->id,
+                            'public'
+                        );
+
+                        IntakeInspectionPhoto::create([
+                            'intake_inspection_id' => $inspection->id,
+                            'inspection_zone_id'   => $zoneId,
+                            'path'                 => $path,
+                        ]);
+                    }
+                }
+            }
+        });
 
         return redirect()
             ->route('intake_sheets.show', $intakeSheet)
-            ->with('success', 'Hoja actualizada correctamente');
+            ->with('success', 'Hoja de ingreso e inspección actualizadas correctamente');
     }
+
 
 
 

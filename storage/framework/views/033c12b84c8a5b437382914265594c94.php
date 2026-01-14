@@ -212,19 +212,16 @@
 
                             
                             <?php
-                                $zoneNotes = $zoneItems->pluck('notes')->filter()->unique();
+                                $zoneObservation = $intakeSheet->inspection?->observations[$zone->id] ?? null;
                             ?>
 
-                            <?php if($zoneNotes->count()): ?>
+                            <?php if($zoneObservation): ?>
                                 <div class="card-footer">
                                     <strong>Observaciones:</strong>
-                                    <ul class="mb-0">
-                                        <?php $__currentLoopData = $zoneNotes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <li><?php echo e($note); ?></li>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </ul>
+                                    <p class="mb-0"><?php echo e($zoneObservation); ?></p>
                                 </div>
                             <?php endif; ?>
+
 
 
                             

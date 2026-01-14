@@ -207,19 +207,16 @@
 
                             {{-- OBSERVACIONES POR ZONA --}}
                             @php
-                                $zoneNotes = $zoneItems->pluck('notes')->filter()->unique();
+                                $zoneObservation = $intakeSheet->inspection?->observations[$zone->id] ?? null;
                             @endphp
 
-                            @if ($zoneNotes->count())
+                            @if ($zoneObservation)
                                 <div class="card-footer">
                                     <strong>Observaciones:</strong>
-                                    <ul class="mb-0">
-                                        @foreach ($zoneNotes as $note)
-                                            <li>{{ $note }}</li>
-                                        @endforeach
-                                    </ul>
+                                    <p class="mb-0">{{ $zoneObservation }}</p>
                                 </div>
                             @endif
+
 
 
                             {{-- FOTOS POR ZONA --}}
